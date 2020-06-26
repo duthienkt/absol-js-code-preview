@@ -1,0 +1,75 @@
+.as-triple-editor>pre
+{
+    margin: 0;
+    min-height: 100px;
+    width: 33.33333%;
+    box-sizing: border-box;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.as-triple-editor>pre:not(:last-child){
+    border-right: 1px solid #ddd;
+}
+
+.as-triple-editor{
+    position: relative;
+}
+
+.as-triple-editor-play-btn{
+    position: absolute;
+    z-index: 10000;
+    right: 5px;
+    top: 25px;
+    padding: 10px;
+    color: crimson;
+    background-color: white;
+    border-radius: 50%;
+    -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.5);
+    box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.5);
+}
+
+.as-triple-editor-play-btn:hover{
+    color: rgb(255, 100, 100);
+}
+
+.as-triple-editor-play-btn:active{
+    -webkit-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.5);
+    box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.5);
+}
+
+.as-triple-editor-html-note,
+.as-triple-editor-css-note,
+.as-triple-editor-js-note
+{
+    position: absolute;
+    top: -5px;
+    text-align: right;
+    color: rgba(169, 169, 250, 1);
+    pointer-events: none;
+    z-index: 1000;
+    background-color: white;
+    padding: 3px;
+    font-size: 1.5em;
+}
+
+.as-triple-editor-js-note{
+    right: 10px;
+}
+
+.as-triple-editor-css-note{
+    right: calc(33.3333% + 10px);
+}
+
+.as-triple-editor-html-note{
+    right: calc(66.6666% + 10px);
+}
+
+
+
+
+
+
