@@ -83,7 +83,8 @@ TripleEditor.prototype.initRoot = function (elt) {
         tag: 'a',
         class: 'as-triple-editor-play-btn',
         props: {
-            href: '#'
+            href: '#',
+            title: 'Preview'
         },
         child: 'span.mdi.mdi-play',
         on: {
