@@ -14,8 +14,9 @@ import 'brace/snippets/css';
 import 'brace/snippets/javascript';
 import 'brace/snippets/html';
 import 'brace/ext/beautify';
-import { randomIdent } from "absol/src/String/stringGenerate";
+import {randomIdent} from "absol/src/String/stringGenerate";
 import Broadcast from "absol/src/Network/Broadcast";
+import Fragment from "absol/src/AppPattern/Fragment";
 
 
 var noneCacheHeader = {
@@ -50,66 +51,92 @@ function TripleEditor() {
     this.$runBtn = null;
     this.channel = randomIdent(10);
     this.slaveUrl = './preview_slave.html';
+    this.$elt = null;
+    this.editorHolders = {};
+    this.editorFlags = [1, 1, 1];
 }
+
+Object.defineProperties(TripleEditor.prototype, Object.getOwnPropertyDescriptors(Fragment.prototype));
+TripleEditor.prototype.constructor = TripleEditor;
+
+
+TripleEditor.prototype.createView = function () {
+    this.$view = _({
+        elt: this.$elt,
+        child: [
+            {
+                class: 'as-triple-editor-ctn',
+                child: [
+                    {
+                        tag: 'pre',
+                        class: 'as-triple-editor-html',
+                    },
+                    {
+                        class: 'as-triple-editor-language-note',
+                        child: { text: 'html' }
+                    }
+                ]
+            },
+            {
+                class: 'as-triple-editor-ctn',
+                child: [
+                    {
+                        tag: 'pre',
+                        class: 'as-triple-editor-css'
+                    },
+                    {
+                        class: 'as-triple-editor-language-note',
+                        child: { text: 'css' }
+                    }
+                ]
+            },
+            {
+                class: 'as-triple-editor-ctn',
+                child: [
+                    {
+                        tag: 'pre',
+                        class: 'as-triple-editor-js'
+                    },
+                    {
+                        class: 'as-triple-editor-language-note',
+                        child: { text: 'html' }
+                    }
+                ]
+            }
+        ]
+    });
+
+    this.$htmlEditor = $('.as-triple-editor-html', this.$view);
+    this.htmlEditor = ace.edit(this.$htmlEditor);
+    this.$cssEditor = $('.as-triple-editor-css', this.$view);
+    this.cssEditor = ace.edit(this.$cssEditor);
+    this.$jsEditor = $('.as-triple-editor-js', this.$view);
+    this.jsEditor = ace.edit(this.$jsEditor);
+    this.$ctns = [this.$htmlEditor.parentElement, this.$cssEditor.parentElement, this.$jsEditor.parentElement];
+    this.updateCtnSizeByFlag();
+};
+
+TripleEditor.prototype.updateCtnSizeByFlag = function () {
+    var count = this.editorFlags[0] + this.editorFlags[1] + this.editorFlags[2];
+    this.$view.addStyle('--editor-width', 100 / count + '%');
+    var s = 0;
+    for (var i = 0; i < 3; ++i) {
+        this.$ctns[i].addStyle('left', 100 / count * s + '%');
+        if (this.editorFlags[i] === 0) {
+            this.$ctns[i].addClass('as-hidden');
+        }
+        else {
+            this.$ctns[i].removeClass('as-hidden');
+            s += 1;
+        }
+    }
+};
+
 
 TripleEditor.prototype.initRoot = function (elt) {
-    this.broashcast = new Broadcast(this.channel, randomIdent(10));
-    this.broashcast.on('GET_ALL', this.sendAllCode.bind(this));
-
-    var thisTE = this;
-    this.$view = elt;
-
-    this.$htmlEditor = _('pre').addTo(this.$view);
-    this.htmlEditor = ace.edit(this.$htmlEditor);
-    this.htmlEditor.setOptions({
-        mode: 'ace/mode/html',
-        enableBasicAutocompletion: true
-    })
-
-    this.$csslEditor = _('pre').addTo(this.$view);
-    this.cssEditor = ace.edit(this.$csslEditor);
-    this.cssEditor.setOptions({
-        mode: 'ace/mode/css',
-        enableBasicAutocompletion: true
-    });
-
-    this.$jsEditor = _('pre').addTo(this.$view);
-    this.jsEditor = ace.edit(this.$jsEditor);
-    this.jsEditor.setOptions({
-        mode: 'ace/mode/javascript',
-        enableBasicAutocompletion: true
-    })
-
-    this.$runBtn = _({
-        tag: 'a',
-        class: 'as-triple-editor-play-btn',
-        props: {
-            href: '#',
-            title: 'Preview'
-        },
-        child: 'span.mdi.mdi-play',
-        on: {
-            click: this.runCode.bind(this)
-        }
-    }).addTo(this.$view);
-    this.$runTrigger = _({
-        tag: 'a',
-        style: {
-            display: 'none',
-        },
-        props: {
-            href: this.slaveUrl + '?channel=' + this.channel,
-            target: "_blank",
-        }
-    }).addTo(this.$view);
-
-    ['html', 'css', 'js'].forEach(function (type) {
-        _({
-            class: 'as-triple-editor-' + type + '-note',
-            child: { text: type }
-        }).addTo(thisTE.$view);
-    });
-}
+    this.$elt = elt;
+    this.getView();
+};
 
 TripleEditor.prototype.runCode = function () {
     var thisTE = this;
@@ -170,6 +197,11 @@ TripleEditor.fromElt = function (elt) {
     var channel = elt.getAttribute('data-channel');
     if (channel)
         editor.channel = channel;
+    var editorFlag = (elt.getAttribute('data-editor-flag') || '0 0 0').split(/\s+/)
+        .map(function (v) {
+            return parseInt(v);
+        });
+    editor.editorFlags = editorFlag;
     editor.initRoot(elt);
     return editor;
 };
