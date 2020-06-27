@@ -1,6 +1,6 @@
 {
     "name": "absol-js-code-preview",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Preview html, css, js code in new tab",
     "main": "dev.js",
     "directories": {
@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/duthienkt/absol-js-code-preview",
     "dependencies": {
-        "absol": "^1.13.4",
+        "absol": "^1.13.5",
         "absol-acomp": "^0.9.12",
         "absol-brace": "^0.9.1"
     },
