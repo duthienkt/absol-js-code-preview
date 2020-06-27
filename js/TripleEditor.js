@@ -61,6 +61,9 @@ TripleEditor.prototype.constructor = TripleEditor;
 
 
 TripleEditor.prototype.createView = function () {
+    this.broashcast = new Broadcast(this.channel, randomIdent(10));
+    this.broashcast.on('GET_ALL', this.sendAllCode.bind(this));
+
     this.$view = _({
         elt: this.$elt,
         child: [
@@ -102,16 +105,53 @@ TripleEditor.prototype.createView = function () {
                         child: { text: 'html' }
                     }
                 ]
+            },
+            {
+                tag: 'a',
+                class: 'as-triple-editor-play-btn',
+                props: {
+                    href: '#',
+                    title: 'Preview'
+                },
+                child: 'span.mdi.mdi-play',
+                on: {
+                    click: this.runCode.bind(this)
+                }
+            },
+            {
+                tag: 'a',
+                class: 'as-triple-editor-run-trigger',
+                style: {
+                    display: 'none',
+                },
+                props: {
+                    href: this.slaveUrl + '?channel=' + this.channel,
+                    target: "_blank",
+                }
             }
         ]
     });
 
+    this.$runTrigger = $('.as-triple-editor-run-trigger', this.$view);
+
     this.$htmlEditor = $('.as-triple-editor-html', this.$view);
     this.htmlEditor = ace.edit(this.$htmlEditor);
+    this.htmlEditor.setOptions({
+        mode: 'ace/mode/html',
+        enableBasicAutocompletion: true
+    });
     this.$cssEditor = $('.as-triple-editor-css', this.$view);
     this.cssEditor = ace.edit(this.$cssEditor);
+    this.cssEditor.setOptions({
+        mode: 'ace/mode/css',
+        enableBasicAutocompletion: true
+    });
     this.$jsEditor = $('.as-triple-editor-js', this.$view);
     this.jsEditor = ace.edit(this.$jsEditor);
+    this.jsEditor.setOptions({
+        mode: 'ace/mode/javascript',
+        enableBasicAutocompletion: true
+    })
     this.$ctns = [this.$htmlEditor.parentElement, this.$cssEditor.parentElement, this.$jsEditor.parentElement];
     this.updateCtnSizeByFlag();
 };
