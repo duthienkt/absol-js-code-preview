@@ -117,14 +117,14 @@ TripleEditor.prototype.runCode = function () {
 
     function finish() {
         clearTimeout(timeout);
-        thisTE.broashcast.off("GET_ALL");
+        thisTE.broashcast.off("RELOADED");
     }
 
-    this.broashcast.on('GET_ALL', finish);
+    this.broashcast.on('RELOADED', finish);
     var timeout = setTimeout(function () {
-        thisTE.broashcast.off("GET_ALL", finish);
+        thisTE.broashcast.off("RELOADED", finish);
         thisTE.$runTrigger.click();
-    }, 2000);
+    }, 1000);
 };
 
 TripleEditor.prototype.loadHtml = function (src) {
@@ -166,10 +166,10 @@ TripleEditor.fromElt = function (elt) {
     if (jsSrc) editor.loadJS(jsSrc);
     var slaveUrl = elt.getAttribute('data-slave-url');
     if (slaveUrl)
-        this.slaveUrl = slaveUrl;
+        editor.slaveUrl = slaveUrl;
     var channel = elt.getAttribute('data-channel');
     if (channel)
-        this.channel = channel;
+        editor.channel = channel;
     editor.initRoot(elt);
     return editor;
 };

@@ -15,6 +15,7 @@ if (url.length > 1) {
 }
 
 var mBroadcast = new Broadcast(GET.channel || "NOT_LISTENING", Math.random()+"");
+mBroadcast.emit("RELOADED", {});
 
 var scriptElt = document.createElement('script');
 var cssElt = document.createElement('style');
@@ -44,7 +45,6 @@ mBroadcast.once("RECEIVE_ALL", function (data) {
 });
 
 mBroadcast.on("RELOAD", function () {
-
     location.reload();
 });
 
