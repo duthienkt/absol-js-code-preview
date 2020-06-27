@@ -12,7 +12,7 @@ var packages = {
     }
 }
 
-const PACKAGE = 'slave';
+const PACKAGE = 'default';
 
 
 module.exports = {
