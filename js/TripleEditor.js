@@ -14,7 +14,7 @@ import 'brace/snippets/css';
 import 'brace/snippets/javascript';
 import 'brace/snippets/html';
 import 'brace/ext/beautify';
-import {randomIdent} from "absol/src/String/stringGenerate";
+import { randomIdent } from "absol/src/String/stringGenerate";
 import Broadcast from "absol/src/Network/Broadcast";
 
 
@@ -49,12 +49,13 @@ function TripleEditor() {
     this.$jsEditor = null;
     this.$runBtn = null;
     this.channel = randomIdent(10);
-    this.broashcast = new Broadcast(this.channel, randomIdent(10));
-    this.broashcast.on('GET_ALL', this.sendAllCode.bind(this));
     this.slaveUrl = './preview_slave.html';
 }
 
 TripleEditor.prototype.initRoot = function (elt) {
+    this.broashcast = new Broadcast(this.channel, randomIdent(10));
+    this.broashcast.on('GET_ALL', this.sendAllCode.bind(this));
+
     var thisTE = this;
     this.$view = elt;
 
@@ -107,7 +108,7 @@ TripleEditor.prototype.initRoot = function (elt) {
             class: 'as-triple-editor-' + type + '-note',
             child: { text: type }
         }).addTo(thisTE.$view);
-    })
+    });
 }
 
 TripleEditor.prototype.runCode = function () {
@@ -123,7 +124,7 @@ TripleEditor.prototype.runCode = function () {
     var timeout = setTimeout(function () {
         thisTE.broashcast.off("GET_ALL", finish);
         thisTE.$runTrigger.click();
-    }, 1000);
+    }, 2000);
 };
 
 TripleEditor.prototype.loadHtml = function (src) {
@@ -157,7 +158,6 @@ TripleEditor.prototype.sendAllCode = function () {
 
 TripleEditor.fromElt = function (elt) {
     var editor = new TripleEditor();
-    editor.initRoot(elt);
     var htmlSrc = elt.getAttribute('data-html-src');
     if (htmlSrc) editor.loadHtml(htmlSrc);
     var cssSrc = elt.getAttribute('data-css-src');
@@ -167,6 +167,10 @@ TripleEditor.fromElt = function (elt) {
     var slaveUrl = elt.getAttribute('data-slave-url');
     if (slaveUrl)
         this.slaveUrl = slaveUrl;
+    var channel = elt.getAttribute('data-channel');
+    if (channel)
+        this.channel = channel;
+    editor.initRoot(elt);
     return editor;
 };
 
