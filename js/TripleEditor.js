@@ -102,7 +102,7 @@ TripleEditor.prototype.createView = function () {
                     },
                     {
                         class: 'as-triple-editor-language-note',
-                        child: { text: 'html' }
+                        child: { text: 'js' }
                     }
                 ]
             },
